@@ -2,12 +2,17 @@ namespace EasyBankingBackOffice.Datenverarbeitung.Transfer
 {
     public class Processingtabelle
     {
+        // Private Liste, für simple Erweiterung der Tabelle
         private List<Eintrag> _tabelle;
-        public double BenötigteBackofficeMitarbeiter { get; }
+
+        public double BenötigteBackofficeMitarbeiter { get; private set; }
+
+        // Konvertierung zu Array im Getter
         public Eintrag[] Tabelle { get => _tabelle.ToArray(); }
 
         public Processingtabelle()
         {
+            // Initialisierung neuer Tabelle
             _tabelle = new List<Eintrag>();
         }
 
@@ -17,14 +22,23 @@ namespace EasyBankingBackOffice.Datenverarbeitung.Transfer
             double mitarbeiterProEinheit
         )
         {
-            if (einheiten < 0 || mitarbeiterProEinheit < 0 || String.IsNullOrWhiteSpace(bezeichnung))
+            // Plausibilitätsprüfungen
+            if (einheiten <= 0 || mitarbeiterProEinheit <= 0 || String.IsNullOrWhiteSpace(bezeichnung))
                 throw new Exception();
 
-            _tabelle.Add(new Eintrag(bezeichnung, einheiten, mitarbeiterProEinheit, BenötigteBackofficeMitarbeiter));
+            // Benötigte Mitarbeiter durch Multiplikation der Parameter ausrechnen
+            double benötigteMitarbeiter = einheiten * mitarbeiterProEinheit;
+
+            // Eigenschaft BenötigteBackofficeMitarbeiter um benötigteMitarbeiter erhöhen
+            BenötigteBackofficeMitarbeiter += benötigteMitarbeiter;
+
+            // Der Tabelle neuen Eintrag hinzufügen (Parameter)
+            _tabelle.Add(new Eintrag(bezeichnung, einheiten, mitarbeiterProEinheit, benötigteMitarbeiter));
         }
 
         public class Eintrag
         {
+            // Eigenschaften für Konstruktor
             public double BenötigteMitarbeiter { get; }
             public string Bezeichnung { get; }
             public double EinheitenAP { get; }
@@ -37,7 +51,8 @@ namespace EasyBankingBackOffice.Datenverarbeitung.Transfer
                 double benötigteMitarbeiter
             )
             {
-                if (String.IsNullOrWhiteSpace(bezeichnung) || einheitenAP < 0 || mitarbeiterProEinheit < 0 || benötigteMitarbeiter < 0)
+                // Plausibilitätsprüfungen
+                if (String.IsNullOrWhiteSpace(bezeichnung) || einheitenAP <= 0 || mitarbeiterProEinheit <= 0 || benötigteMitarbeiter <= 0)
                     throw new Exception();
 
                 BenötigteMitarbeiter = benötigteMitarbeiter;

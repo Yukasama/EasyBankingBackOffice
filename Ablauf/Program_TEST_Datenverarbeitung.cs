@@ -346,6 +346,8 @@ namespace EasyBankingBackOffice.TestLogik
             Console.WriteLine("\n\n--- ERGEBNIS ---\n");
 
             PrintResult();
+
+            Console.ReadKey();
         }
     }
 }
